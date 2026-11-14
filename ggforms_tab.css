@@ -182,3 +182,75 @@
     height: 200px;
   }
 }
+
+/* Google Forms Bar Tooltip */
+.gf-bar-tooltip {
+  position: absolute;
+  z-index: 99999;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  box-shadow: 0 3px 8px rgba(60,64,67,0.24);
+  padding: 10px 14px;
+  font-family: Roboto, Arial, sans-serif;
+  max-width: 380px;
+  min-width: 220px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease-out;
+}
+
+.gf-bar-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gf-bar-tooltip-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #202124;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.gf-bar-tooltip-val {
+  font-size: 13px;
+  color: #202124;
+  line-height: 1.4;
+}
+
+/* Tooltip Arrow */
+.gf-tooltip-arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  transform: rotate(45deg);
+  pointer-events: none;
+  margin-left: -6px;
+}
+
+.gf-bar-tooltip.arrow-bottom .gf-tooltip-arrow {
+  bottom: -7px;
+  border-top: none;
+  border-left: none;
+}
+
+.gf-bar-tooltip.arrow-top .gf-tooltip-arrow {
+  top: -7px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.gf-bar-rect {
+  cursor: pointer;
+  transition: opacity 0.12s ease, stroke 0.12s ease;
+}
+
+.gf-bar-rect:hover {
+  opacity: 0.9;
+  stroke: #202124;
+  stroke-width: 1px;
+}

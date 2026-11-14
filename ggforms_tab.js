@@ -128,6 +128,76 @@
     return { layout, svg };
   }
 
+  // Interactive Google Forms Tooltip
+  let tooltipEl = null;
+  let tooltipArrow = null;
+  let tooltipTitle = null;
+  let tooltipVal = null;
+
+  function initTooltip() {
+    if (tooltipEl) return;
+    tooltipEl = document.createElement('div');
+    tooltipEl.className = 'gf-bar-tooltip';
+
+    tooltipTitle = document.createElement('div');
+    tooltipTitle.className = 'gf-bar-tooltip-title';
+
+    tooltipVal = document.createElement('div');
+    tooltipVal.className = 'gf-bar-tooltip-val';
+
+    tooltipArrow = document.createElement('div');
+    tooltipArrow.className = 'gf-tooltip-arrow';
+
+    tooltipEl.append(tooltipTitle, tooltipVal, tooltipArrow);
+    document.body.append(tooltipEl);
+  }
+
+  function showBarTooltip(barEl, questionText, score, count, pct) {
+    initTooltip();
+    tooltipTitle.textContent = questionText;
+    tooltipVal.innerHTML = `${score}: ${count} (${pct}%)`;
+
+    tooltipEl.className = 'gf-bar-tooltip visible arrow-bottom';
+
+    const bRect = barEl.getBoundingClientRect();
+    const barCenterX = bRect.left + bRect.width / 2 + window.scrollX;
+    const barTopY = bRect.top + window.scrollY;
+
+    const tw = tooltipEl.offsetWidth;
+    const th = tooltipEl.offsetHeight;
+
+    let left = barCenterX - tw / 2;
+    const minLeft = window.scrollX + 12;
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - tw - 12;
+    left = Math.max(minLeft, Math.min(maxLeft, left));
+
+    let top = barTopY - th - 12;
+    let isFlipped = false;
+
+    if (top < window.scrollY + 10) {
+      top = barTopY + bRect.height + 12;
+      isFlipped = true;
+    }
+
+    tooltipEl.style.left = `${left}px`;
+    tooltipEl.style.top = `${top}px`;
+
+    if (isFlipped) {
+      tooltipEl.className = 'gf-bar-tooltip visible arrow-top';
+    } else {
+      tooltipEl.className = 'gf-bar-tooltip visible arrow-bottom';
+    }
+
+    const arrowX = Math.max(12, Math.min(tw - 12, barCenterX - left));
+    tooltipArrow.style.left = `${arrowX}px`;
+  }
+
+  function hideBarTooltip() {
+    if (tooltipEl) {
+      tooltipEl.classList.remove('visible');
+    }
+  }
+
   // 2. Render Google Forms Grouped Column Chart (5 sub-questions x 5 bars)
   function renderGfGroupedColumnChart(subQuestions, maxScaleValue = 150) {
     const width = 760;
@@ -209,6 +279,8 @@
       const startX = clusterCenterX - groupBarsWidth / 2;
 
       // Draw 5 bars
+      const qTotal = Object.values(qData.counts).reduce((a, b) => a + b, 0) || 309;
+
       ['1', '2', '3', '4', '5'].forEach((score, barIdx) => {
         const count = qData.counts[score] || 0;
         const barH = (count / maxScaleValue) * chartH;
@@ -221,9 +293,17 @@
           width: barWidth,
           height: Math.max(barH, 1),
           fill: GF_BAR_COLORS[score],
+          class: 'gf-bar-rect',
         });
-        const pct = qData.percentages ? qData.percentages[score] : ((count / 309) * 100).toFixed(1);
-        rect.append(svgNode('title', {}, `${qData.text}\nMức ${score}: ${count} phiếu (${pct}%)`));
+        const pct = ((count / qTotal) * 100).toFixed(1).replace('.', ',');
+
+        rect.addEventListener('mouseenter', () => {
+          showBarTooltip(rect, qData.text, score, count, pct);
+        });
+        rect.addEventListener('mouseleave', () => {
+          hideBarTooltip();
+        });
+
         svg.append(rect);
       });
 
