@@ -17,10 +17,12 @@ Mở trình duyệt truy cập: **http://127.0.0.1:8080**
 
 - **Tab 1: Phiếu khảo sát (Điền thử)**: Giao diện web mô phỏng biểu mẫu thực tế, đầy đủ 40 câu hỏi (1 câu gạn lọc, 35 câu Likert 5 mức độ theo 7 nhóm nhân tố, 4 câu nhân khẩu học). Có kiểm tra bắt buộc, cảnh báo câu gạn lọc và làm lại khảo sát.
 - **Tab 2: Thống kê & Phân tích**: Dashboard trực quan hiển thị cơ cấu mẫu (biểu đồ tròn SVG cho giới tính, năm học, kinh nghiệm; biểu đồ cột cho mạng xã hội) và thanh đo tỷ lệ phần trăm phân bố kèm điểm trung bình ($\bar{X}$) của 35 biến quan sát Likert.
+- **Tab 3: Biểu đồ Google Forms**: Tái hiện giao diện tóm tắt phản hồi của Google Forms với các biểu đồ cột nhóm và biểu đồ tròn nguyên bản.
 
----
+### Trực tiếp trên GitHub Pages
 
-## 2. Điền số liệu % mong muốn
+Website đã được xuất bản trực tiếp tại:
+👉 **https://twotnguyen.github.io/hutech-graphic-design-survey/**
 
 Mở file **`PHAN-BO-MONG-MUON.md`** để điền tỷ lệ % mong muốn cho từng câu hỏi:
 
