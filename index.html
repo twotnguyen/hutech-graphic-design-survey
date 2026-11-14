@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#005baa">
+  <title>Khảo sát Thương hiệu cá nhân sinh viên Thiết kế đồ họa HUTECH</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="statistics.css">
+  <link rel="stylesheet" href="ggforms_tab.css">
+  <script src="questions.js" defer></script>
+  <script src="stats_data.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="statistics.js" defer></script>
+  <script src="ggforms_tab.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <!-- Top Creative Banner -->
+    <header class="banner">
+      <div class="banner-copy">
+        <span class="banner-badge">HUTECH • Graphic Design</span>
+        <h2>Khảo sát Thương hiệu cá nhân</h2>
+        <span>Các nhân tố ảnh hưởng đến sự phát triển thương hiệu cá nhân của sinh viên ngành Thiết kế đồ họa</span>
+      </div>
+      <!-- Vector Illustration (Pen tool & Creative studio art) -->
+      <svg class="banner-art" viewBox="0 0 380 190" aria-hidden="true">
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f37021" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#fb923c" stop-opacity="0.2"/>
+          </linearGradient>
+          <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#0284c7" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+        <!-- Canvas & Geometry -->
+        <rect x="220" y="25" width="130" height="145" rx="8" fill="url(#grad2)" transform="rotate(8 285 97)"/>
+        <rect x="200" y="30" width="130" height="145" rx="8" fill="#ffffff" fill-opacity="0.12" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.3" transform="rotate(-5 265 102)"/>
+        <!-- Bezier Curve & Anchor Points -->
+        <path d="M 120 160 C 180 50, 260 180, 360 80" fill="none" stroke="#f37021" stroke-width="3" stroke-linecap="round"/>
+        <line x1="180" y1="50" x2="150" y2="80" stroke="#f1f5f9" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <circle cx="180" cy="50" r="4" fill="#38bdf8"/>
+        <circle cx="150" cy="80" r="4" fill="#ffffff"/>
+        <!-- Stylized Pen Tool Nib -->
+        <g transform="translate(260, 60) rotate(-35) scale(0.9)">
+          <path d="M0,0 L20,-50 L40,0 L32,35 L8,35 Z" fill="#ffffff" stroke="#003e75" stroke-width="2"/>
+          <line x1="20" y1="-50" x2="20" y2="15" stroke="#003e75" stroke-width="2"/>
+          <circle cx="20" cy="15" r="3.5" fill="#f37021"/>
+        </g>
+        <!-- Palette & Swatches -->
+        <circle cx="340" cy="140" r="16" fill="#10b981" fill-opacity="0.7"/>
+        <circle cx="320" cy="165" r="12" fill="#f37021" fill-opacity="0.8"/>
+        <circle cx="280" cy="170" r="8" fill="#38bdf8" fill-opacity="0.9"/>
+      </svg>
+    </header>
+
+    <!-- Intro Card -->
+    <section class="card intro">
+      <h1 id="survey-title"></h1>
+      <p class="intro-desc">
+        Bảng khảo sát này được thực hiện nhằm thu thập dữ liệu sơ cấp cho đề tài nghiên cứu về <strong>“Các nhân tố ảnh hưởng đến sự phát triển thương hiệu cá nhân của sinh viên ngành Thiết kế đồ họa tại Trường Đại học Công nghệ TP.HCM (HUTECH)”</strong>.
+        Mọi ý kiến đóng góp khách quan của bạn đóng vai trò then chốt cho sự thành công của nghiên cứu. Thông tin được bảo mật và chỉ sử dụng cho mục đích phân tích học thuật.
+      </p>
+      <p class="demo-note">
+        💡 <strong>Bản điền thử nghiệm độc lập</strong>: Mô phỏng đầy đủ logic biểu mẫu, câu hỏi gạn lọc, 35 biến quan sát Likert và các đặc điểm nhân khẩu học. Không gửi dữ liệu trực tiếp lên máy chủ Google Forms.
+      </p>
+      <p class="required-note"><span aria-hidden="true">*</span> Biểu thị câu hỏi bắt buộc</p>
+    </section>
+
+    <!-- Tab Bar -->
+    <nav class="tabs" role="tablist" aria-label="Nội dung hiển thị">
+      <button type="button" id="questions-tab" class="tab" role="tab" aria-selected="true" aria-controls="questions-panel">
+        📝 Phiếu khảo sát (Điền thử)
+      </button>
+      <button type="button" id="statistics-tab" class="tab" role="tab" aria-selected="false" aria-controls="statistics-panel" tabindex="-1">
+        📊 Thống kê & Phân tích <span id="response-badge" class="badge"></span>
+      </button>
+      <button type="button" id="ggforms-tab" class="tab" role="tab" aria-selected="false" aria-controls="ggforms-panel" tabindex="-1">
+        📈 Biểu đồ Google Forms
+      </button>
+    </nav>
+
+    <!-- Tab 1: Survey Form View -->
+    <div id="questions-panel" role="tabpanel" aria-labelledby="questions-tab">
+      <form id="survey-form" novalidate>
+        <div id="sections"></div>
+        <p id="validation-summary" class="validation-summary" role="alert"></p>
+        <div class="actions">
+          <button type="submit" class="button primary">Hoàn tất khảo sát</button>
+          <button type="button" id="clear" class="text-button">Xóa hết câu trả lời</button>
+        </div>
+      </form>
+
+      <!-- Success Screen on trial submission -->
+      <section id="success" class="card success" aria-labelledby="success-title" tabindex="-1" hidden>
+        <div class="check-icon" aria-hidden="true">✓</div>
+        <h2 id="success-title">Cảm ơn bạn đã hoàn thành bảng khảo sát!</h2>
+        <p>Bạn đã hoàn thành đầy đủ 40 câu hỏi trong bản điền thử nghiệm. Câu trả lời đã được xác thực hợp lệ trên giao diện.</p>
+        <button type="button" id="restart" class="button primary">Điền lại từ đầu</button>
+      </section>
+    </div>
+
+    <!-- Tab 2: Statistics & Simulation Dashboard -->
+    <div id="statistics-panel" role="tabpanel" aria-labelledby="statistics-tab" hidden>
+      <div class="card">
+        <div class="stats-header">
+          <div>
+            <h2 class="stats-title">Báo cáo Thống kê & Cơ cấu mẫu</h2>
+            <p class="stats-subtitle">Dữ liệu mô phỏng dựa trên chỉ tiêu phân phối của đề tài</p>
+          </div>
+          <div class="stats-counter-badge">
+            <span>●</span> Dữ liệu đã đồng bộ
+          </div>
+        </div>
+        <div id="statistics-content">
+          <p style="color:var(--muted);">Đang nạp dữ liệu thống kê…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Google Forms Native Style Responses View -->
+    <div id="ggforms-panel" role="tabpanel" aria-labelledby="ggforms-tab" hidden>
+      <div id="ggforms-content"></div>
+    </div>
+  </main>
+</body>
+</html>
