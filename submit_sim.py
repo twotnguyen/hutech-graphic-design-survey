@@ -12,7 +12,7 @@ import os
 import random
 import sys
 import time
-
+import requests
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(here, "..", "googleform-autofill-and-submit"))
 import form  # noqa: E402
@@ -37,46 +37,43 @@ assert os.path.exists(csv_file), f"Chưa có file {csv_file}, hãy chạy python
 rows = list(csv.reader(open(csv_file, encoding="utf-8-sig")))
 header, data = rows[0], rows[1:]
 
-# Cột 0 là Dấu thời gian, các cột sau ứng với entries
-page_history = "0,1,2,3"
-
+# Đọc tiến trình đã gửi từ submit_log.jsonl
 log_path = os.path.join(here, "submit_log.jsonl")
 done = set()
 if os.path.exists(log_path):
     for line in open(log_path, encoding="utf-8"):
         if line.strip():
             done.add(json.loads(line)["row"])
-
-# Quy trình chuyển trang: Page 0 -> 1 -> 2 -> 3
-page_history = "0,1,2"
-
 n = 0
-for idx in range(a.start, len(data)):
-    if n >= a.count:
-        break
-    if idx in done:
-        continue
-
-    row_values = data[idx][1:]  # Bỏ cột Dấu thời gian
-    body = {}
-    for e, v in zip(entries, row_values):
-        if not v:
+with requests.Session() as session:
+    for idx in range(a.start, len(data)):
+        if n >= a.count:
+            break
+        if idx in done:
             continue
-        # Checkbox nhiều lựa chọn ngăn cách bằng ' | '
-        val = v.split(" | ") if e["type"] == 4 else v
-        body[f"entry.{e['id']}"] = val
 
-    body["pageHistory"] = page_history
+        row_values = data[idx][1:]  # Bỏ cột Dấu thời gian
+        body = {}
+        for e, v in zip(entries, row_values):
+            if not v:
+                continue
+            # Checkbox nhiều lựa chọn ngăn cách bằng ' | '
+            val = v.split(" | ") if e["type"] == 4 else v
+            body[f"entry.{e['id']}"] = val
 
-    if not a.send:
-        print(f"[DRY-RUN] Dòng {idx}: {json.dumps(body, ensure_ascii=False)[:250]}...")
-    else:
-        gf.submit(a.url, body)
-        with open(log_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps({"row": idx, "ts": time.strftime("%F %T")}) + "\n")
-        print(f"Đã gửi thành công dòng {idx}", flush=True)
-        time.sleep(random.uniform(1.5, 3.5))
+        # Xử lý rẽ nhánh: 'Không' chuyển thẳng mục 3 (lời cảm ơn), 'Có' đi qua đầy đủ các trang
+        body["pageHistory"] = "0,3" if row_values[0] == "Không" else "0,1,2,3"
 
-    n += 1
+        if not a.send:
+            print(f"[DRY-RUN] Dòng {idx} ({row_values[0]}): {json.dumps(body, ensure_ascii=False)[:250]}...")
+        else:
+            gf.submit(a.url, body, session=session)
+            with open(log_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps({"row": idx, "ts": time.strftime("%F %T")}) + "\n")
+                f.flush()
+            print(f"[{n+1}/{a.count}] Đã gửi thành công dòng {idx} ({row_values[0]})", flush=True)
+            time.sleep(random.uniform(0.4, 0.9))
+
+        n += 1
 
 print(f"Hoàn thành {n} lượt.")
